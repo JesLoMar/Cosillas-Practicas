@@ -12,7 +12,12 @@ Son unos métodos que he hecho para generar todas las **IDs de forma automática
 ---
 
 ## ¿Cómo funciona?
-Pues la verdad que es bastante "simple", mirad en los propios archivos que le he dicho a [Gemini](https://gemini.google.com/) que lo comente **bonito y breve**.
+Pues la verdad que es bastante "simple", mirad en los propios archivos que le he dicho a [Gemini](https://gemini.google.com/) que lo comente **bonito y breve**. 
+
+¡Ah!, acabo de acordarme, como aviso digo que con esto, quería evitar todas las llamadas posibles a base de datos para no saturar y para generar el id numerico final, lo que nosotros poníamos como 00001, 00002 y tal, lo que he hecho ha sido en el administrador usar los 5 primeros caracteres del hash del DNI.
+### ¿Porqué?
+
+Porque malo será que coincidan las 3 letras y los 5 caracteres de los hashes, aún así, se podría reforzar haciendo alguna que otra validación en BD y cambiando dinámicamente un una variable llamada: *longitudHash* de la función: *obtenerSufijoHash*.
 
 ---
 
