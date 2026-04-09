@@ -17,9 +17,9 @@ public class Pruebas {
         // 4. Strings que se quedan VACÍOS tras limpiar
         String ex4 = CrearId.administrador("-", "777", CrearId.obtenerHash("33333333C"));
         // 5. Apellidos de una sola letra (Nombres orientales o errores)
-        String ex5 = CrearId.alumno("Li", "Y", CrearId.obtenerHash("44444444D"));
+        String ex5 = CrearId.alumno("CEN-CER-A1B2", CrearId.obtenerHash("44444444D"));
         // 6. Espacios múltiples y tabulaciones
-        String ex6 = CrearId.alumno(" Clara  ", "  Chia   Chamarra  ", CrearId.obtenerHash("55555555E"));
+        String ex6 = CrearId.alumno("CEN-CER-A1B2", CrearId.obtenerHash("55555555E"));
         // 7. Valores Nulos (Null Safety)
         String ex7 = CrearId.profesor(null, null, CrearId.obtenerHash("00000000X"));
         // 8. Apellido compuesto y doble.
