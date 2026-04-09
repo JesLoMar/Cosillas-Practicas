@@ -40,13 +40,12 @@ public class CrearId {
     // ==========================================================
     // Genera el ID para un Alumno (Formato: ALU-III-HHHH)
     // ==========================================================
-    public static String alumno(String nombre, String apellidos, String hashNia) {
-        String inicialNombre = obtenerInicialNombre(nombre);
-        String apellidosNormalizados = normalizar(apellidos).trim().toUpperCase();
-        String inicialesApellidos = obtenerInicialesApellidos(apellidosNormalizados);
+    public static String alumno(String centroId, String hashNia) { //Gracias Ignacio por la correccion :) 
+
+        String centroNombre = obtenerMitadId(centroId);
         String sufijoHash = obtenerSufijoHash(hashNia);
 
-        return "ALU-" + inicialNombre + inicialesApellidos + "-" + sufijoHash;
+        return "ALU-" + centroNombre + "-" + sufijoHash;
     }
 
     // ==========================================================
