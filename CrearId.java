@@ -40,7 +40,7 @@ public class CrearId {
     // ==========================================================
     // Genera el ID para un Alumno (Formato: ALU-III-HHHH)
     // ==========================================================
-    public static String alumno(String centroId, String hashNia) { //Gracias Ignacio por la correccion :) 
+    public static String alumno(String centroId, String hashNia) {
 
         String centroNombre = obtenerMitadId(centroId);
         String sufijoHash = obtenerSufijoHash(hashNia);
@@ -91,8 +91,8 @@ public class CrearId {
     // ==========================================================
     // Genera el ID relacional para un Informe (Hereda de la Encuesta)
     // ==========================================================
-    public static String informe(String encuestaId, String claseId, String centroId, String profeId) {
-        String infoHash = obtenerSufijoHash(obtenerHash(encuestaId + claseId + centroId + profeId));
+    public static String informe(String encuestaId, String centroId, String profeId) {
+        String infoHash = obtenerSufijoHash(obtenerHash(obtenerMitadId(centroId) + obtenerMitadId(profeId)));
         return "INF-" + obtenerMitadId(encuestaId) + "-" + infoHash;
     }
 
