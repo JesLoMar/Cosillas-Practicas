@@ -239,6 +239,8 @@ public class GeneradorId {
         boolean test41 = idRespuesta1.equals(idRespuesta2);
         printResult("Respuesta determinista", test41);
 
+
+        // Dudas: https://c.tenor.com/B0piVWUiKaUAAAAd/tenor.gif
         // ---------------------------------------------------------------
         // PRUEBAS: Métodos de hashing
         // ---------------------------------------------------------------
