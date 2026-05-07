@@ -19,7 +19,8 @@ public class GeneradorId {
     private static final String PREFIJO_ENCUESTA = "ENC-";
     private static final String PREFIJO_INFORME = "INF-";
     private static final String PREFIJO_PREGUNTA = "PRG-";
-    private static final String PREFIJO_QR = "QR-";
+    private static final String PREFIJO_QR_ENCUESTA = "QRE-";
+    private static final String PREFIJO_QR_REGISTRO = "QRR-";
     private static final String PREFIJO_RESPUESTA = "RSP-";
 
     private static final String VALOR_HASH_VACIO_CENTRO = "CEN-XXX-7423";
@@ -198,26 +199,30 @@ public class GeneradorId {
         boolean test33 = !idPregunta1.equals(idPregunta3);
         printResult("Pregunta diferenciada por orden", test33);
 
-        // ---------------------------------------------------------------
-        // PRUEBAS: QR
-        // ---------------------------------------------------------------
+// ---------------------------------------------------------------
+// PRUEBAS: QR
+// ---------------------------------------------------------------
         System.out.println("\n--- PRUEBAS QR ---");
 
+// QR tipo ENCUESTA
         String idQrEncuesta = generarIdQr("ENC-AB-CD12", null);
-        boolean test34 = idQrEncuesta.startsWith("QR-");
-        boolean test35 = !idQrEncuesta.contains("REG-");
+        boolean test34 = idQrEncuesta.startsWith("QRE-");
+        boolean test35 = !idQrEncuesta.contains("QRR-");
         printResult("QR tipo ENCUESTA", test34 && test35);
 
+// QR tipo REGISTRO_CLASE
         String idQrRegistro = generarIdQr(null, "codigoClase123");
-        boolean test36 = idQrRegistro.startsWith("QR-");
-        boolean test37 = idQrRegistro.contains("REG-");
+        boolean test36 = idQrRegistro.startsWith("QRR-");
+        boolean test37 = !idQrRegistro.contains("QRE-");
         printResult("QR tipo REGISTRO_CLASE", test36 && test37);
 
+// QR determinista
         String idQr1 = generarIdQr("ENC-AB-CD12", null);
         String idQr2 = generarIdQr("ENC-AB-CD12", null);
         boolean test38 = idQr1.equals(idQr2);
         printResult("QR determinista", test38);
 
+// QR con ambos null (debería lanzar excepción)
         try {
             generarIdQr(null, null);
             System.out.println("  FAIL ✗ - QR con ambos null NO lanzó excepción");
@@ -225,20 +230,24 @@ public class GeneradorId {
             System.out.println("  PASS ✓ - QR con ambos null lanza excepción correctamente");
         }
 
-        // ---------------------------------------------------------------
-        // PRUEBAS: Respuesta
-        // ---------------------------------------------------------------
+// ---------------------------------------------------------------
+// PRUEBAS: Respuesta
+// ---------------------------------------------------------------
         System.out.println("\n--- PRUEBAS RESPUESTA ---");
 
-        String idRespuesta1 = generarIdRespuesta("ENC-AB-CD12", "ALU-XYZ-5678");
-        boolean test39 = idRespuesta1.contains("-RSP-");
-        boolean test40 = idRespuesta1.startsWith("ENC-");
-        printResult("Respuesta formato básico", test39 && test40);
+        String idRespuesta1 = generarIdRespuesta("ENC-AB-CD12", "PRG-CD12-A1B2", "ALU-XYZ-5678");
+        boolean test51 = idRespuesta1.startsWith("RSP-");
+        boolean test52 = !idRespuesta1.startsWith("ENC-"); // Ya no empieza por ENC-
+        boolean test53 = idRespuesta1.split("-").length == 3; // RSP-CD12-XXXX
+        printResult("Respuesta formato básico", test51 && test52 && test53);
 
-        String idRespuesta2 = generarIdRespuesta("ENC-AB-CD12", "ALU-XYZ-5678");
-        boolean test41 = idRespuesta1.equals(idRespuesta2);
-        printResult("Respuesta determinista", test41);
+        String idRespuesta2 = generarIdRespuesta("ENC-AB-CD12", "PRG-CD12-A1B2", "ALU-XYZ-5678");
+        boolean test54 = idRespuesta1.equals(idRespuesta2);
+        printResult("Respuesta determinista", test54);
 
+        // Verificar que contiene siglas de la encuesta (completadas a 3 caracteres)
+        boolean test55 = idRespuesta1.contains("ABX");
+        printResult("Respuesta contiene siglas encuesta", test55);
 
         // Dudas: https://c.tenor.com/B0piVWUiKaUAAAAd/tenor.gif
         // ---------------------------------------------------------------
@@ -298,7 +307,7 @@ public class GeneradorId {
             generarIdEncuesta("", "", 0, "");
             generarIdInforme("", "", "");
             generarIdPregunta("", "", 0);
-            generarIdRespuesta("", "");
+            generarIdRespuesta("", "", "");
             System.out.println("  PASS ✓ - Todos los generadores soportan strings vacíos");
         } catch (Exception e) {
             System.out.println("  FAIL ✗ - Algún generador falló con strings vacíos: " + e.getMessage());
@@ -307,14 +316,14 @@ public class GeneradorId {
         String[] ids = {
                 generarIdAdministrador("Test", "User", "00000000T"),
                 generarIdProfesor("Test", "User", "00000000T"),
-                generarIdAlumno("CEN-ABC-1234", "code123"),
+                generarIdAlumno("CEN-ABC-1234", "alumno@ejemplo.com"),
                 generarIdCentro("Test", "Test", "Test", "Test"),
                 generarIdClase("Test", "Test", "Test", "Test", "A", "CEN-ABC-1234"),
                 generarIdEncuesta("Test", "2024", 1, "PRO-AB-CD12"),
                 generarIdInforme("ENC-AB-CD12", "CEN-XYZ-5678", "PRO-WQ-9ABC"),
                 generarIdPregunta("ENC-AB-CD12", "Test", 1),
                 generarIdQr("ENC-AB-CD12", null),
-                generarIdRespuesta("ENC-AB-CD12", "ALU-XYZ-5678")
+                generarIdRespuesta("ENC-AB-CD12", "PRG-CD12-A1B2", "ALU-XYZ-5678")
         };
 
         boolean noSpaces = true;
@@ -329,6 +338,46 @@ public class GeneradorId {
         System.out.println("\n==========================================");
         System.out.println("   PRUEBAS COMPLETADAS");
         System.out.println("   Total: " + total + " | Pasadas: " + passed + " | Fallidas: " + (total - passed));
+        // ---------------------------------------------------------------
+// MUESTRA DE IDs GENERADOS
+// ---------------------------------------------------------------
+        System.out.println("\n==========================================");
+        System.out.println("   MUESTRA DE IDs GENERADOS");
+        System.out.println("==========================================\n");
+
+        String centroPrueba = generarIdCentro("IES Francisco de Goya", "Madrid", "Madrid", "Centro");
+        String adminPrueba = generarIdAdministrador("María", "García López", "12345678Z");
+        String profePrueba = generarIdProfesor("Ana", "Martínez Ruiz", "11111111H");
+        String alumnoPrueba = generarIdAlumno(centroPrueba, "alumno1@ejemplo.com");
+        String clasePrueba = generarIdClase("Matemáticas", "Secundaria", "2º", "2024/2025", "A", centroPrueba);
+        String encuestaPrueba = generarIdEncuesta("Clima Escolar", "2024/2025", 1, profePrueba);
+        String preguntaPrueba = generarIdPregunta(encuestaPrueba, "¿Cómo te sientes hoy?", 1);
+        String informePrueba = generarIdInforme(encuestaPrueba, centroPrueba, profePrueba);
+        String respuestaPrueba = generarIdRespuesta(encuestaPrueba, preguntaPrueba, alumnoPrueba);
+        String qrEncuestaPrueba = generarIdQr(encuestaPrueba, null);
+        String qrRegistroPrueba = generarIdQr(null, "codigoClase123");
+
+        System.out.println("  Admin:     " + adminPrueba);
+        System.out.println("  Profesor:  " + profePrueba);
+        System.out.println("  Alumno:    " + alumnoPrueba);
+        System.out.println("  Centro:    " + centroPrueba);
+        System.out.println("  Clase:     " + clasePrueba);
+        System.out.println("  Encuesta:  " + encuestaPrueba);
+        System.out.println("  Pregunta:  " + preguntaPrueba);
+        System.out.println("  Informe:   " + informePrueba);
+        System.out.println("  Respuesta: " + respuestaPrueba);
+        System.out.println("  QR (Enc):  " + qrEncuestaPrueba);
+        System.out.println("  QR (Reg):  " + qrRegistroPrueba);
+
+// Mostrar partes internas de un ID como ejemplo
+        System.out.println("\n  --- Desglose de Respuesta ---");
+        System.out.println("  ID completo:  " + respuestaPrueba);
+        String[] partesRespuesta = respuestaPrueba.split("-");
+        System.out.println("  Prefijo:      " + partesRespuesta[0]);
+        System.out.println("  Siglas Enc:   " + partesRespuesta[1]);
+        System.out.println("  Hash:         " + partesRespuesta[2]);
+
+        System.out.println("\n==========================================");
         System.out.println("==========================================");
     }
 
@@ -411,17 +460,19 @@ public class GeneradorId {
 
     public static String generarIdQr(String encuestaId, String codigoAcceso) {
         if (encuestaId != null && !encuestaId.isBlank()) {
-            return PREFIJO_QR + obtenerMitadId(encuestaId) + "-" + obtenerSufijoHash(generarHash(encuestaId));
+            // Es un QR de tipo ENCUESTA
+            return PREFIJO_QR_ENCUESTA + obtenerMitadId(encuestaId) + "-" + obtenerSufijoHash(generarHash(encuestaId));
         } else if (codigoAcceso != null && !codigoAcceso.isBlank()) {
-            return PREFIJO_QR + "REG-" + obtenerSufijoHash(generarHash(codigoAcceso));
+            // Es un QR de tipo REGISTRO_CLASE
+            return PREFIJO_QR_REGISTRO + "REG-" + obtenerSufijoHash(generarHash(codigoAcceso));
         } else {
             throw new IllegalArgumentException("Para generar un ID de QR se necesita 'encuestaId' o 'codigoAcceso'.");
         }
     }
 
-    public static String generarIdRespuesta(String encuestaId, String alumnoId) {
-        String infoHash = obtenerSufijoHash(generarHash(alumnoId));
-        return encuestaId + "-" + PREFIJO_RESPUESTA + infoHash;
+    public static String generarIdRespuesta(String encuestaId, String preguntaId, String alumnoId) {
+        String infoHash = obtenerSufijoHash(generarHash(obtenerMitadId(preguntaId) + obtenerMitadId(alumnoId)));
+        return PREFIJO_RESPUESTA + obtenerMitadId(encuestaId) + "-" + infoHash;
     }
 
     // =========================================================================
@@ -472,8 +523,14 @@ public class GeneradorId {
     private static String obtenerMitadId(String idCompleta) {
         if (idCompleta == null || idCompleta.isBlank()) return "XXX";
         String[] mitadIdArray = idCompleta.split("-");
-        if (mitadIdArray.length >= 2) return mitadIdArray[1];
-        return "XXX";
+        if (mitadIdArray.length >= 2) {
+            String mitad = mitadIdArray[1];
+            while (mitad.length() < 3) {
+                mitad += "X";
+            }
+            return mitad.substring(0, 3);
+        }
+        return "XXX"; // Que no XD
     }
 
     // =========================================================================
