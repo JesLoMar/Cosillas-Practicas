@@ -18,7 +18,8 @@ En lugar de usar el típico ID autoincremental `00001`, `00002` (que obliga a co
 | **Encuesta** | `ENC-` + Siglas Profesor + `-` + Hash(Encuesta) | `ENC-CD12-K1L2` |
 | **Informe** | `INF-` + Siglas Encuesta + `-` + Hash(Centro+Profe) | `INF-CD12-M3N4` |
 | **Pregunta** | `PRG-` + Siglas Encuesta + `-` + Hash(Texto+Orden) | `PRG-CD12-O5P6` |
-| **QR** | `QR-` + Siglas Encuesta/REG + `-` + Hash | `QR-CD12-Q7R8` / `QR-REG-S9T0` |
+| **QR Encuesta** | `QRE-` + Siglas Encuesta + `-` + Hash(EncuestaId) | `QRE-AMR-A1B2` |
+| **QR Registro** | `QRR-REG-` + Hash(CódigoAcceso) | `QRR-REG-C3D4` |
 | **Respuesta** | `RSP-` + Siglas Encuesta + `-` + Hash(Pregunta + Alumno) | `RSP-CD12-S9T0` |
 
 ---
@@ -72,7 +73,8 @@ Se usa **SHA-256** sobre los campos más estables de cada entidad:
 | Encuesta | Nombre + Curso académico + Trimestre |
 | Informe | Centro + Profesor |
 | Pregunta | Texto + Orden |
-| QR | EncuestaId o CódigoAcceso |
+| QR (Encuesta) | EncuestaId |
+| QR (Registro) | CódigoAcceso |
 | Respuesta | Pregunta + Alumno |
 
 Del hash SHA-256 (64 caracteres hexadecimales) se toman solo los **4 primeros caracteres** para mantener los IDs compactos.
