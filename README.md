@@ -12,14 +12,14 @@ En lugar de usar el típico ID autoincremental `00001`, `00002` (que obliga a co
 |---------|---------|---------|
 | **Admin** | `ADM-` + Inicial Nombre + Iniciales Apellidos + `-` + Hash(DNI) | `ADM-MGL-A1B2` |
 | **Profesor** | `PRO-` + Inicial Nombre + Iniciales Apellidos + `-` + Hash(DNI) | `PRO-AMR-C3D4` |
-| **Alumno** | `ALU-` + Siglas Centro + `-` + Hash(CódigoAcceso) | `ALU-ABC-E5F6` |
+| **Alumno** | `ALU-` + Siglas Centro + `-` + Hash(Correo) | `ALU-ABC-E5F6` |
 | **Centro** | `CEN-` + 3 Letras Nombre + `-` + Hash(Ubicación) | `CEN-FGO-7G8H` |
 | **Clase** | `CLA-` + Siglas Centro + `-` + Hash(Clase) | `CLA-ABC-I9J0` |
 | **Encuesta** | `ENC-` + Siglas Profesor + `-` + Hash(Encuesta) | `ENC-CD12-K1L2` |
 | **Informe** | `INF-` + Siglas Encuesta + `-` + Hash(Centro+Profe) | `INF-CD12-M3N4` |
 | **Pregunta** | `PRG-` + Siglas Encuesta + `-` + Hash(Texto+Orden) | `PRG-CD12-O5P6` |
 | **QR** | `QR-` + Siglas Encuesta/REG + `-` + Hash | `QR-CD12-Q7R8` / `QR-REG-S9T0` |
-| **Respuesta** | EncuestaId + `-RSP-` + Hash(Alumno) | `ENC-AB-CD12-RSP-U1V2` |
+| **Respuesta** | `RSP-` + Siglas Encuesta + `-` + Hash(Pregunta + Alumno) | `RSP-CD12-S9T0` |
 
 ---
 
@@ -66,14 +66,14 @@ Se usa **SHA-256** sobre los campos más estables de cada entidad:
 |---------|---------------------------|
 | Admin | DNI |
 | Profesor | DNI |
-| Alumno | Código de acceso |
+| Alumno | Correo electrónico |
 | Centro | Nombre + Comunidad + Ciudad + Localidad |
 | Clase | Nombre + Nivel + Grado + Curso + Letra |
 | Encuesta | Nombre + Curso académico + Trimestre |
 | Informe | Centro + Profesor |
 | Pregunta | Texto + Orden |
 | QR | EncuestaId o CódigoAcceso |
-| Respuesta | AlumnoId |
+| Respuesta | Pregunta + Alumno |
 
 Del hash SHA-256 (64 caracteres hexadecimales) se toman solo los **4 primeros caracteres** para mantener los IDs compactos.
 
